@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wind Energy Harvesting Simulator</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+<aside class="side">
+  <h1>🌬 WindNode</h1>
+  <nav><a data-v="dash" class="on">Dashboard</a><a data-v="ana">Analytics</a><a data-v="set">Settings</a></nav>
+  <p class="foot">Sustainable Energy Engineering<br>Wind + Supercapacitor IoT node</p>
+</aside>
+<main>
+<section id="dash" class="view on">
+  <h2>Live Dashboard <span id="mode" class="badge">—</span></h2>
+  <div class="bar">
+    <button id="start" class="g">▶ Start</button><button id="pause">⏸ Pause</button>
+    <button id="reset">↺ Reset</button><button id="newwind" class="c">🌪 New Wind Conditions</button>
+    <label>Speed <select id="speed"><option value="1">1 min/s</option><option value="10" selected>10 min/s</option><option value="60">1 h/s</option><option value="360">6 h/s</option></select></label>
+    <label><input type="checkbox" id="manual"> Manual wind</label>
+    <input type="range" id="wslider" min="0" max="25" step="0.5" value="6"><b id="wval">6.0 m/s</b>
+  </div>
+  <div id="err" class="err"></div>
+  <div class="grid">
+    <div class="card"><span>Sim time</span><b id="time">—</b></div>
+    <div class="card"><span>Wind speed</span><b id="wind">—</b></div>
+    <div class="card"><span>Generated power</span><b id="gen">—</b></div>
+    <div class="card"><span>Stored energy</span><b id="energy">—</b></div>
+    <div class="card"><span>Capacitor voltage</span><b id="volt">—</b></div>
+    <div class="card"><span>Energy consumption</span><b id="cons">—</b></div>
+    <div class="card"><span>System uptime</span><b id="up">—</b></div>
+    <div class="card"><span>Transmission success</span><b id="tx">—</b></div>
+    <div class="card"><span>Temperature / Humidity</span><b id="th">—</b></div>
+    <div class="card wide"><span>Charge level <b id="pct" class="inl">—</b></span><div class="prog"><i id="pbar"></i></div>
+      <small id="lasttx">Last packet: —</small></div>
+    <div class="card wide"><span>Energy balance (J)</span><small id="bal">—</small></div>
+  </div>
+  <div class="charts">
+    <div class="card"><h3>Generation vs consumption (W)</h3><canvas id="c1"></canvas></div>
+    <div class="card"><h3>Supercapacitor charge (%)</h3><canvas id="c2"></canvas></div>
+    <div class="card"><h3>Wind speed (m/s)</h3><canvas id="c3"></canvas></div>
+  </div>
+</section>
+
+<section id="ana" class="view">
+  <h2>Analytics — 14-day simulation</h2>
+  <div class="bar"><button id="run14" class="g">Simulate 14 days</button><span id="anastat">Uses the current Settings and wind seed.</span></div>
+  <div id="anaerr" class="err"></div>
+  <div class="grid" id="sumcards"></div>
+  <div class="charts">
+    <div class="card"><h3>Hourly generation vs consumption (W)</h3><canvas id="a1"></canvas></div>
+    <div class="card"><h3>Supercapacitor charge (%)</h3><canvas id="a2"></canvas></div>
+    <div class="card"><h3>Wind speed (m/s)</h3><canvas id="a3"></canvas></div>
+    <div class="card"><h3>Daily uptime &amp; transmission success (%)</h3><canvas id="a4"></canvas></div>
+  </div>
+  <div class="card tablewrap"><table id="daytbl"><thead><tr><th>Day</th><th>Avg wind</th><th>Harvested J</th><th>Consumed J</th><th>Spilled J</th><th>Active %</th><th>Low %</th><th>Sleep %</th><th>Uptime %</th><th>Tx ok/sent</th><th>Tx %</th></tr></thead><tbody></tbody></table></div>
+</section>
+
+<section id="set" class="view">
+  <h2>Settings</h2>
+  <p class="muted">Applying settings restarts the simulation (capacitor size and thresholds change the initial state).</p>
+  <div id="seterr" class="err"></div>
+  <form id="form" class="grid form" onsubmit="return false"></form>
+  <div class="bar"><button id="apply" class="g">Apply &amp; Restart</button></div>
+</section>
+</main>
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
